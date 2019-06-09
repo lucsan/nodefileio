@@ -24,6 +24,14 @@
         "semi": [
             "error",
             "never"
+        ],
+        "no-console": "off",
+        "no-restricted-syntax": [
+            "error",
+            {
+                "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(log|info|trace)$/]",
+                "message": "Unexpected property on console object was called"
+            }
         ]
     }
 }

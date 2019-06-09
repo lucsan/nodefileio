@@ -28,10 +28,10 @@ const walksDirectorys = (rootDir, doneCallback) => {
   walks(rootDir, doneCallback)
 }
 
-const loadsFilesContents = (filesArray, doneCallback) => {
+const loadsFilesContents = (files, doneCallback) => {
   let filesData = []
-  let pending = filesArray.length
-  filesArray.map(fa => {
+  let pending = files.length
+  files.map(fa => {
     fs.readFile(fa, (err, data) => {
       filesData.push({ path: fa, data: data.toString()})
       if (!--pending) doneCallback(filesData)
@@ -39,27 +39,27 @@ const loadsFilesContents = (filesArray, doneCallback) => {
   })
 }
 
-const writesFile = (pagePath, pageHtml) => {
-  fs.writeFile(pagePath, pageHtml, function (err) {
-    if (err) console.log(err)
+const writesFile = (path, string) => {
+  fs.writeFile(path, string, function (err) {
+    logError(err)
   })
 }
 
-const writesFiles = (pagesArray, callback) => {
-  let pending = pagesArray.length
-  pagesArray.map(p => {
-    fs.writeFile(p.path, p.html, function (err) {
-      if (err) console.log(err)
+const writesFiles = (files, callback) => {
+  let pending = files.length
+  files.map(p => {
+    fs.writeFile(p.path, p.string, function (err) {
+      logError(err)
       if (!--pending) callback()
     })
   })
 }
 
-const copysFiles = (pathsArray, callback) => {
-  let pending = pathsArray.length
-  pathsArray.map(ps => {
+const copysFiles = (files, callback) => {
+  let pending = files.length
+  files.map(ps => {
     fs.copyFile(ps.src, ps.dst, err => {
-      if (err) console.log(err);
+      logError(err)
       if (!--pending) callback()
     })
   })
@@ -70,7 +70,6 @@ const createsFolder = (path, callback) => {
 }
 
 const createsFolders = (paths, callback) => {
-  if (callback === undefined) callback = () => { return }
   let pending = paths.length
   paths.map(path => {
     fs.mkdir(path, err => {
@@ -82,18 +81,45 @@ const createsFolders = (paths, callback) => {
 
 const folderExists = (err) => {
   if (err.code == 'EEXIST') return true
-  console.log(err)
+  logError(err)
   return false
 }
 
-const removesFolder = (path) => {
-  fs.rmdir(path, err => console.log(err) )
+const removesFolder = (path, callback) => {
+  removesFolders([path], callback)
+}
+
+const removesFolders = (paths, callback) => {
+  let pending = paths.length
+  paths.map(path => {
+    fs.rmdir(path, err => {
+      if (err && err != null) logError(err)
+      if (!--pending) callback()
+    })
+  })
+}
+
+const removesFiles = (paths, callback) => {
+  let pending = paths.length
+  paths.map(path => {
+    fs.unlink(path, err => {
+      logError(err)
+      if (!--pending) callback()
+    })
+  })
+}
+
+const logError = (err) => {
+  if (err) console.log(err)
 }
 
 exports.walksDirectorys = walksDirectorys
 exports.loadsFilesContents = loadsFilesContents
 exports.writesFile = writesFile
+exports.writesFiles = writesFiles
 exports.createsFolder = createsFolder
 exports.createsFolders = createsFolders
 exports.removesFolder = removesFolder
+exports.removesFolders = removesFolders
+exports.removesFiles = removesFiles
 exports.copysFiles = copysFiles
