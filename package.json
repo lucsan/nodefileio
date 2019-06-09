@@ -1,0 +1,24 @@
+{
+  "name": "nodefileio",
+  "version": "1.0.0",
+  "description": "Simple file and folder read and write module for nodejs.",
+  "main": "fileIO.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "file",
+    "IO"
+  ],
+  "author": "lucsan@zencorp.co.uk",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucsan/nodefileio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lucsan/nodefileio/issues"
+  },
+  "homepage": "https://github.com/lucsan/nodefileio#readme"
+}
